@@ -202,9 +202,6 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		int maxShifts = DEFAULT_MAX_SHIFTS_IN_ROW;
 		for (int j = 1; j < daysOfMonth - maxShifts + 1; j++)
 		{
-			// (day_j or night_j) and (day_j+1 or night_j+1) ... and (day_j+MAX_SHIFTS_IN_ROW or
-			// night_j+MAX_SHIFTS_IN_ROW) )
-			// and (!day_j+MAX_SHIFTS_IN_ROW+1 and !night_j+MAX_SHIFTS_IN_ROW+1 ))
 			Map<String, Variable> variables = new HashMap<String, Variable>();
 			String constraint = "!(";
 			int dayIdx = j;
