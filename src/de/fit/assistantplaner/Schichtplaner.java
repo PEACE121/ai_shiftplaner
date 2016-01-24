@@ -33,30 +33,32 @@ import astarframework.Node;
 public class Schichtplaner implements IGACObersvers, IAStarObersvers
 {
 	// parameters which need to be configurable in the future
-	private static int				ASSISTANTS						= 10;
-	private static int				DEFAULT_MAX_SHIFTS_IN_ROW	= 3;
+	private static int				ASSISTANTS	= 10;
 	
 	// parameters for logging the update
-	private int							counter							= 0;
-	private float						lastAvg							= -1;
+	private int							counter		= 0;
+	private float						lastAvg		= -1;
 	
-	private final List<Assistant>	assistants						= new ArrayList<Assistant>();
+	private final List<Assistant>	assistants	= new ArrayList<Assistant>();
+	
+	private final String				fileOut;
 	
 	
 	/**
 	 * @param fieldInfo
 	 */
-	public Schichtplaner()
+	public Schichtplaner(String fileIn, String fileOut, int distFromDesired, int maxDaysInRow)
 	{
 		// ####################################################################################
 		// ################################ Parse CSV File ####################################
 		// ####################################################################################
 		super();
+		this.fileOut = fileOut;
 		Reader in;
 		List<CSVRecord> list = new ArrayList<CSVRecord>();
 		try
 		{
-			in = new FileReader("Dienstplan.csv");
+			in = new FileReader(fileIn);
 			CSVParser parser;
 			try
 			{
@@ -83,9 +85,9 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 				break;
 			if (row > 8)
 			{
-				assistants.add(new Assistant(record.get(28), Integer.valueOf(record.get(31)) - 1, Integer.valueOf(record
-						.get(31)) + 1, DEFAULT_MAX_SHIFTS_IN_ROW, new ArrayList<Shift>()));
-				System.out.println(assistants.get(assistants.size() - 1).toString());
+				assistants.add(new Assistant(record.get(28), Integer.valueOf(record.get(31)) - distFromDesired, Integer
+						.valueOf(record.get(31)) + distFromDesired, maxDaysInRow, new ArrayList<Shift>()));
+				// System.out.println(assistants.get(assistants.size() - 1).toString());
 			}
 			row++;
 		}
@@ -110,14 +112,14 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 						
 						assistants.get(i)
 								.addPossibleDay(new Shift(row - 7, true, (record.get(4).equals("x") ? true : false)));
-						System.out.println(assistants.get(i).getName() + " cannot work the day shift on " + (row - 7));
+						// System.out.println(assistants.get(i).getName() + " cannot work the day shift on " + (row - 7));
 					}
 					
 					if (record.get(i + 6 + ASSISTANTS).equals(""))
 					{
 						assistants.get(i).addPossibleDay(
 								new Shift(row - 7, false, (record.get(4).equals("x") ? true : false)));
-						System.out.println(assistants.get(i).getName() + " cannot work the night shift on " + (row - 7));
+						// System.out.println(assistants.get(i).getName() + " cannot work the night shift on " + (row - 7));
 					}
 				}
 				shifts.put("day_" + (row - 7), new Shift(row - 7, true, (record.get(4).equals("x") ? true : false)));
@@ -185,8 +187,8 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 					constraints.add(new Constraint("night_" + notPossibleShift.getDay() + "!="
 							+ assistant.getNumericalRepresentation(), variables));
 				}
-				System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation() + ": "
-						+ constraints.get(constraints.size() - 1).getVariables().size());
+				// System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation() + ": "
+				// + constraints.get(constraints.size() - 1).getVariables().size());
 				
 			}
 		}
@@ -202,11 +204,11 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			variables.put("day_" + j, vars.get((j * 2) - 2));
 			variables.put("night_" + j, vars.get((j * 2) - 1));
 			constraints.add(new Constraint("!(day_" + j + " == " + "night_" + j + ")", variables));
-			System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
+			// System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
 		}
 		
 		// 6. - die Anzahl an aufeinanderfolgenden Schichten (zum Beispiel nicht mehr als drei)
-		int maxShifts = DEFAULT_MAX_SHIFTS_IN_ROW;
+		int maxShifts = maxDaysInRow;
 		for (int j = 1; j < daysOfMonth - maxShifts + 1; j++)
 		{
 			Map<String, Variable> variables = new HashMap<String, Variable>();
@@ -228,7 +230,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			
 			
 			constraints.add(new Constraint(constraint, variables));
-			System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
+			// System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
 		}
 		
 		
@@ -303,7 +305,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		}
 		**/
 		
-		System.out.println("Constraints: " + constraints.size());
+		System.out.println("Constraints generated: " + constraints.size());
 		
 		// ####################################################################################
 		// ########################### Invoke Constraint Solver ###############################
@@ -314,9 +316,10 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		AStar aStarInstance = new AStar(aStarGAC);
 		aStarInstance.register(this);
 		long startTime = System.nanoTime();
+		System.out.println("Average needs to go down to 1 to find the first solution.");
 		aStarInstance.run();
 		System.out.println("Elapsed time: "
-				+ TimeUnit.SECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS));
+				+ TimeUnit.SECONDS.convert(System.nanoTime() - startTime, TimeUnit.NANOSECONDS) + " seconds");
 	}
 	
 	
@@ -325,7 +328,23 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 	 */
 	public static void main(String[] args)
 	{
-		new Schichtplaner();
+		switch (args.length)
+		{
+			case 4:
+				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+			case 3:
+				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), 3);
+			case 2:
+				new Schichtplaner(args[0], args[1], 1, 3);
+				break;
+			case 1:
+				new Schichtplaner(args[0], "results.csv", 1, 3);
+				break;
+			default:
+				System.out
+						.println("Usage: Schichtplaner <csv input file> <csv output file> <max distance from desired amount of shifts, default: 1> <max shifts in row, default: 3>");
+				break;
+		}
 		return;
 	}
 	
@@ -344,7 +363,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			PrintWriter writer;
 			try
 			{
-				writer = new PrintWriter("result.csv", "UTF-8");
+				writer = new PrintWriter(fileOut, "UTF-8");
 				System.out.println(" ---------- Result -------------");
 				for (VI vi : gacState.getVis().values())
 				{
@@ -353,8 +372,8 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 							+ hashToAssist(vi.getDomain().get(0).getNumericalRepresentation()).getName();
 					System.out.println(csvLine);
 					writer.println(csvLine);
-					
 				}
+				System.out.println("Result can be found in " + fileOut + ". Algorithm log:");
 				writer.close();
 			} catch (FileNotFoundException | UnsupportedEncodingException e)
 			{
@@ -373,7 +392,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			domainSize += vi.getDomain().size();
 		}
 		float averageSize = ((float) domainSize) / ((float) 62);
-		if (lastAvg != averageSize)
+		if (counter % 100 == 0) // (lastAvg != averageSize)
 		{
 			System.out.println("Iterations: " + counter + ", last avg: " + lastAvg);
 			lastAvg = averageSize;

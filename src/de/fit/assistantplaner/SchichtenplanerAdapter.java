@@ -51,7 +51,6 @@ public class SchichtenplanerAdapter extends AStarAdapter
 		}
 		
 		float dist = distanceToSolution(gacState);
-		System.out.println(dist);
 		return (int) dist + h;
 	}
 	
@@ -81,7 +80,8 @@ public class SchichtenplanerAdapter extends AStarAdapter
 					|| amounts.get(assistant.getNumericalRepresentation()) < assistant.getMinAmountOfShifts())
 			{
 				System.out.println(assistant.getName() + " has " + amounts.get(assistant.getNumericalRepresentation())
-						+ ". min/max: " + assistant.getMinAmountOfShifts() + "/" + assistant.getMaxAmountOfShifts());
+						+ ". min/max: " + assistant.getMinAmountOfShifts() + "/" + assistant.getMaxAmountOfShifts()
+						+ " -> backtrack and retry...");
 				return false;
 			}
 		}
@@ -93,21 +93,27 @@ public class SchichtenplanerAdapter extends AStarAdapter
 	{
 		HashMap<Integer, Float> amounts = new HashMap<Integer, Float>();
 		HashMap<Integer, Float> weekendAmounts = new HashMap<Integer, Float>();
+		HashMap<Integer, Float> nightAmounts = new HashMap<Integer, Float>();
 		for (Assistant assistant : assistants)
 		{
 			amounts.put(assistant.getNumericalRepresentation(), 0f);
 			weekendAmounts.put(assistant.getNumericalRepresentation(), 0f);
+			nightAmounts.put(assistant.getNumericalRepresentation(), 0f);
 		}
 		for (VI vi : state.getVis().values())
 		{
 			for (IDomainAttribute da : vi.getDomain())
 			{
+				float normalization = vi.getDomain().size();
 				Integer representation = da.getNumericalRepresentation();
-				amounts.put(representation, amounts.get(representation) + ((float) 1 / (float) vi.getDomain().size()));
+				amounts.put(representation, amounts.get(representation) + (1 / normalization));
 				if (shifts.get(vi.getVarInCNET().getName()).isWeekend())
 				{
-					weekendAmounts.put(representation, amounts.get(representation)
-							+ ((float) 1 / (float) vi.getDomain().size()));
+					weekendAmounts.put(representation, weekendAmounts.get(representation) + (1 / normalization));
+				}
+				if (!shifts.get(vi.getVarInCNET().getName()).IsDayShift())
+				{
+					nightAmounts.put(representation, nightAmounts.get(representation) + (1 / normalization));
 				}
 			}
 		}
@@ -122,7 +128,12 @@ public class SchichtenplanerAdapter extends AStarAdapter
 			float shiftsAmount = amounts.get(assistant.getNumericalRepresentation());
 			
 			float weekendDist = (weekendOpt - (weekendAmounts.get(assistant.getNumericalRepresentation()) / shiftsAmount));
-			distance += dist * dist + weekendDist * weekendDist;
+			
+			float nights = nightAmounts.get(assistant.getNumericalRepresentation());
+			float proprotion = (nights / shiftsAmount);
+			
+			float nightDist = (0.5f - proprotion);
+			distance += dist * dist + weekendDist * weekendDist + nightDist * nightDist;
 		}
 		return distance;
 	}
