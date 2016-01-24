@@ -84,7 +84,8 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			if (row > 8)
 			{
 				assistants.add(new Assistant(record.get(28), Integer.valueOf(record.get(31)) - 1, Integer.valueOf(record
-						.get(31)), DEFAULT_MAX_SHIFTS_IN_ROW, new ArrayList<Shift>()));
+						.get(31)) + 1, DEFAULT_MAX_SHIFTS_IN_ROW, new ArrayList<Shift>()));
+				System.out.println(assistants.get(assistants.size() - 1).toString());
 			}
 			row++;
 		}
@@ -181,6 +182,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 				}
 				System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation() + ": "
 						+ constraints.get(constraints.size() - 1).getVariables().size());
+				
 			}
 		}
 		
@@ -224,6 +226,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 			System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
 		}
 		
+		
 		// alternative: every assistant has an individual amount of max shifts in row
 		// for (int i = 0; i < ASSISTANTS; i++)
 		// {
@@ -256,6 +259,44 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		// }
 		// }
 		
+		
+		// 3. - die Anzahl der einzelnen Schichten der Assistenten (z.B. Min 5 Max 7) - DONE in post processing
+/** does not work, too many variables for one constraint
+		for (int i = 0; i < ASSISTANTS; i++)
+		{
+			Map<String, Variable> variables = new HashMap<String, Variable>();
+			int count = 0;
+			for (Variable var : vars)
+			{
+				System.out.println(var.getName());
+				variables.put(var.getName(), var);
+				count++;
+			}
+			int assHash = assistants.get(i).getNumericalRepresentation();
+			String constraint = "(";
+			// constraint += "var c" + i + " = ";
+			for (int j = 1; j < daysOfMonth + 1; j++)
+			{
+				constraint += "(day_" + j + "==" + assHash + "?1:0) + (night_" + j + "==" + assHash + "?1:0) + ";
+			}
+			constraint = constraint.substring(0, constraint.length() - 3);
+			constraint += ") <" + assistants.get(i).getMaxAmountOfShifts();
+			// constraints.add(new Constraint(constraint, variables));
+			System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
+			
+			constraint = "(";
+			// constraint += "var c" + i + " = ";
+			for (int j = 1; j < daysOfMonth + 1; j++)
+			{
+				constraint += "(day_" + j + "==" + assHash + "?1:0) + (night_" + j + "==" + assHash + "?1:0) + ";
+			}
+			constraint = constraint.substring(0, constraint.length() - 3);
+			constraint += ") >" + assistants.get(i).getMinAmountOfShifts();
+			// constraints.add(new Constraint(constraint, variables));
+			constraints.add(new Constraint("1 > -1", variables));
+			System.out.println(constraints.get(constraints.size() - 1).getCanonicalFormulation());
+		}
+		**/
 		
 		System.out.println("Constraints: " + constraints.size());
 		

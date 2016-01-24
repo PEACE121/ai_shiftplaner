@@ -126,4 +126,11 @@ public class Assistant implements IDomainAttribute
 	}
 	
 	
+	@Override
+	public String toString()
+	{
+		return name + ", max: " + maxAmountOfShifts + ", min: " + minAmountOfShifts;
+	}
+	
+	
 }

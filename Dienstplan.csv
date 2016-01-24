@@ -3,11 +3,11 @@
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,Tagschicht,,,,,,,,,,,Nachtschicht,,,,,,,,,,Kommentar,,,,,,,                    ,,,,,,,,,"
-Tagschicht",,,,,,,,,,,Nachtschicht,,,,,,,,,,Kommentar,MÃ¶glichkeiten Tag,MÃ¶glichkeiten Nacht,gleicher AS Tag und Nacht,Tagschicht auf Nachtschicht,Kein oder 2 AS geplant Tag,Kein oder 2 AS geplant Nacht
-Hilfzeile Feiertage,,,,F e i e r t a g,B Ã¤ r b e l,C h r i s t i a n e,C o r a,H e i n z,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,B Ã¤ r b e l,C h r i s t i a n e,C o r a,H e i n z ,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,,,,,,,,,,,,,,F e i e r t a g ,FE Hilfe,B Ã¤ r b e l,C h r i s t i a n e,C o r a,H e i n z,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,B Ã¤ r b e l,C h r i s t i a n e,C o r a,H e i n z ,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,,,,,,
+Tagschicht",,,,,,,,,,,Nachtschicht,,,,,,,,,,Kommentar,Möglichkeiten Tag,Möglichkeiten Nacht,gleicher AS Tag und Nacht,Tagschicht auf Nachtschicht,Kein oder 2 AS geplant Tag,Kein oder 2 AS geplant Nacht
+Hilfzeile Feiertage,,,,F e i e r t a g,B ä r b e l,C h r i s t i a n e,C o r a,H e i n z,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,B ä r b e l,C h r i s t i a n e,C o r a,H e i n z ,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,,,,,,,,,,,,,,F e i e r t a g ,FE Hilfe,B ä r b e l,C h r i s t i a n e,C o r a,H e i n z,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,B ä r b e l,C h r i s t i a n e,C o r a,H e i n z ,M a r t i n,M a t t h i a s ,J u l i a,T h o m a s,A n d r e a s,L a u r a,,,,,,,
 ,Hilfzeile Feiertage,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,01.09.2015,1,Tue,,x,,,,x,,x,x,x, ,,x,,,,x,,,,,,,,,Kommentar,Urlaub ,Wunschschichten maximal (bitte nur eine Zahl),Anzahl Schichten,Davon Wochende,Wunschichten = Schichtanzahl,Davon Feiertage,Feiertage + Wochenende,,1,Tue,,,,,,,,,,,x,,,,,,,x,,,,,,,1,1,FALSE,FALSE,9,9
-,02.09.2015,2,Wed,,x,x,,x,x,,x,,,x,,x,,,x,x,,,,,x,,,BÃ¤rbel,bitte 1 x we mit mo frÃ¼h frei,,10,9,3,-1,0,3,,2,Wed,,,x,,,,,,,,,,,,,,,x,,,,,,,1,1,FALSE,FALSE,9,9
+,02.09.2015,2,Wed,,x,x,,x,x,,x,,,x,,x,,,x,x,,,,,x,,,Bärbel,bitte 1 x we mit mo früh frei,,10,9,3,-1,0,3,,2,Wed,,,x,,,,,,,,,,,,,,,x,,,,,,,1,1,FALSE,FALSE,9,9
 ,03.09.2015,3,Thu,,x,x,,x,,,x,,,x,,x,,,x,,,,,,x,,,Christiane,,,6,6,2,0,0,2,,3,Thu,,,x,,,,,,,,,,,,,,x,,,,,,,,1,1,FALSE,FALSE,9,9
 ,04.09.2015,4,Fri,,x,x,,x,,x,x,,,x,,x,,,x,,,,,,x,,,Cora,,,4,3,1,-1,0,1,,4,Fri,,,,,,,,,x,,,,,,,,x,,,,,,,,1,1,FALSE,FALSE,9,9
 ,05.09.2015,5,Sat,,x,,,x,,x,,,,x,,x,,,x,,,,,,x,, ,Heinz,,,6,6,3,0,,3,,5,Sat,,,,,,,,x,,,,,,,,,,,,,,,x,,1,1,FALSE,FALSE,9,9
@@ -16,7 +16,7 @@ Hilfzeile Feiertage,,,,F e i e r t a g,B Ã¤ r b e l,C h r i s t i a n e,C o r a,
 ,08.09.2015,8,Tue,,x,,,x,"
 ",x,,,,x,,x,x,,x,x,x,,,,x,,,Julia,,,4,3,1,-1,0,1,,8,Tue,,,,,,x,,,,,,,,x,,,,,,,,,,,1,1,FALSE,FALSE,9,9
 ,09.09.2015,9,Wed,,x,,x,x,x,x,,x,,x,,x,,x,x,x,,,,,x,,,Thomas,,,6,5,1,-1,0,1,,9,Wed,,,,,,x,,,,,,,,x,,,,,,,,,,,1,1,FALSE,FALSE,9,9
-,10.09.2015,10,Thu,,x,x,,x,x,,,x,,x,,x,,x,x,x,,,,x,x,,,Andreas,,25.9.â€“4.10.,4,4,0,0,0,0,,10,Thu,,,,,,,,,,x,,,,,,x,,,,,,,,,1,1,FALSE,FALSE,9,9
+,10.09.2015,10,Thu,,x,x,,x,x,,,x,,x,,x,,x,x,x,,,,x,x,,,Andreas,,25.9.–4.10.,4,4,0,0,0,0,,10,Thu,,,,,,,,,,x,,,,,,x,,,,,,,,,1,1,FALSE,FALSE,9,9
 ,11.09.2015,11,Fri,,x,x,,x,x,x,,,x,x,,x,,,x,x,,,,,x,,,Laura,,,6,8,1,2,0,1,,11,Fri,,,,,,,,x,,,,,,,,,x,,,,,,,,1,1,FALSE,FALSE,9,9
 ,12.09.2015,12,Sat,,x,,x,x,,x,,x,x,x,,x,,x,x,,,,,x,x,,,,,,,0,0,0,0,0,,12,Sat,,,,,,,,,,x,,,,,,,x,,,,,,,,1,1,FALSE,FALSE,9,9
 ,13.09.2015,13,Sun,,x,,x,x,,x,,x,x,x,,x,,x,x,,x,x,,x,x,,,Summe,,,62,60,18,,,,,13,Sun,,,x,,,,,,,,,,,,,,,,x,,,,,,1,1,FALSE,FALSE,9,9
