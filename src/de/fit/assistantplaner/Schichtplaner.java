@@ -47,12 +47,13 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 	/**
 	 * @param fieldInfo
 	 */
-	public Schichtplaner(String fileIn, String fileOut, int distFromDesired, int maxDaysInRow)
+	public Schichtplaner(String fileIn, String fileOut, int distFromDesired, int maxDaysInRow, int assistantAmount)
 	{
 		// ####################################################################################
 		// ################################ Parse CSV File ####################################
 		// ####################################################################################
 		super();
+		ASSISTANTS = assistantAmount;
 		this.fileOut = fileOut;
 		Reader in;
 		List<CSVRecord> list = new ArrayList<CSVRecord>();
@@ -330,19 +331,22 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 	{
 		switch (args.length)
 		{
+			case 5:
+				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]),
+						Integer.parseInt(args[4]));
 			case 4:
-				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]), 10);
 			case 3:
-				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), 3);
+				new Schichtplaner(args[0], args[1], Integer.parseInt(args[2]), 3, 10);
 			case 2:
-				new Schichtplaner(args[0], args[1], 1, 3);
+				new Schichtplaner(args[0], args[1], 1, 3, 10);
 				break;
 			case 1:
-				new Schichtplaner(args[0], "results.csv", 1, 3);
+				new Schichtplaner(args[0], "results.csv", 1, 3, 10);
 				break;
 			default:
 				System.out
-						.println("Usage: Schichtplaner <csv input file> <csv output file> <max distance from desired amount of shifts, default: 1> <max shifts in row, default: 3>");
+						.println("Usage: Schichtplaner <csv input file> <csv output file> <max distance from desired amount of shifts, default: 1> <max shifts in row, default: 3> <assistant amount, default: 10>");
 				break;
 		}
 		return;
