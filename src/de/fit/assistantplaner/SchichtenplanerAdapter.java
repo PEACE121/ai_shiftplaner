@@ -10,20 +10,32 @@ import gac.instances.VI;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import astarframework.IState;
 
 
 public class SchichtenplanerAdapter extends AStarAdapter
 {
-	private final List<Assistant>	assistants;
+	private final List<Assistant>		assistants;
+	private final Map<String, Shift>	shifts;
+	
+	private float							weekendOpt	= 0f;
 	
 	
 	public SchichtenplanerAdapter(List<Constraint> constraints, List<Variable> vars, ENextVariable next,
-			List<Assistant> assistants)
+			List<Assistant> assistants, Map<String, Shift> shifts)
 	{
 		super(constraints, vars, next);
 		this.assistants = assistants;
+		this.shifts = shifts;
+		
+		for (Shift shift : this.shifts.values())
+		{
+			if (shift.isWeekend())
+				weekendOpt += 1;
+		}
+		weekendOpt = weekendOpt / this.shifts.size();
 	}
 	
 	
@@ -80,16 +92,23 @@ public class SchichtenplanerAdapter extends AStarAdapter
 	private float distanceToSolution(GACState state)
 	{
 		HashMap<Integer, Float> amounts = new HashMap<Integer, Float>();
+		HashMap<Integer, Float> weekendAmounts = new HashMap<Integer, Float>();
 		for (Assistant assistant : assistants)
 		{
 			amounts.put(assistant.getNumericalRepresentation(), 0f);
+			weekendAmounts.put(assistant.getNumericalRepresentation(), 0f);
 		}
 		for (VI vi : state.getVis().values())
 		{
 			for (IDomainAttribute da : vi.getDomain())
 			{
 				Integer representation = da.getNumericalRepresentation();
-				amounts.put(representation, amounts.get(representation) + (1 / vi.getDomain().size()));
+				amounts.put(representation, amounts.get(representation) + ((float) 1 / (float) vi.getDomain().size()));
+				if (shifts.get(vi.getVarInCNET().getName()).isWeekend())
+				{
+					weekendAmounts.put(representation, amounts.get(representation)
+							+ ((float) 1 / (float) vi.getDomain().size()));
+				}
 			}
 		}
 		
@@ -99,7 +118,11 @@ public class SchichtenplanerAdapter extends AStarAdapter
 		{
 			float opt = (assistant.getMaxAmountOfShifts() + assistant.getMinAmountOfShifts()) / 2;
 			float dist = (opt - amounts.get(assistant.getNumericalRepresentation()));
-			distance += dist * dist;
+			
+			float shiftsAmount = amounts.get(assistant.getNumericalRepresentation());
+			
+			float weekendDist = (weekendOpt - (weekendAmounts.get(assistant.getNumericalRepresentation()) / shiftsAmount));
+			distance += dist * dist + weekendDist * weekendDist;
 		}
 		return distance;
 	}

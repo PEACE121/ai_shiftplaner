@@ -2,19 +2,21 @@ package de.fit.assistantplaner;
 
 public class Shift
 {
-	private int			day;
-	private boolean	isDayShift;
+	private int					day;
+	private boolean			isDayShift;
+	private final boolean	isWeekend;
 	
 	
 	/**
 	 * @param day
 	 * @param isDayShift
 	 */
-	public Shift(int day, boolean isDayShift)
+	public Shift(int day, boolean isDayShift, boolean isWeekend)
 	{
 		super();
 		this.day = day;
 		this.isDayShift = isDayShift;
+		this.isWeekend = isWeekend;
 	}
 	
 	
@@ -51,6 +53,15 @@ public class Shift
 	public void setIsDayShift(boolean isDayShift)
 	{
 		this.isDayShift = isDayShift;
+	}
+	
+	
+	/**
+	 * @return the isWeekend
+	 */
+	public boolean isWeekend()
+	{
+		return isWeekend;
 	}
 	
 	

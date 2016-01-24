@@ -91,6 +91,7 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		}
 		
 		// find available dates
+		Map<String, Shift> shifts = new HashMap<String, Shift>();
 		row = 1;
 		int daysOfMonth = 1;
 		for (CSVRecord record : list)
@@ -106,17 +107,21 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 				{
 					if (record.get(i + 5).equals(""))
 					{
-						assistants.get(i).addPossibleDay(new Shift(row - 7, true));
+						
+						assistants.get(i)
+								.addPossibleDay(new Shift(row - 7, true, (record.get(4).equals("x") ? true : false)));
 						System.out.println(assistants.get(i).getName() + " cannot work the day shift on " + (row - 7));
 					}
 					
 					if (record.get(i + 6 + ASSISTANTS).equals(""))
 					{
-						assistants.get(i).addPossibleDay(new Shift(row - 7, false));
+						assistants.get(i).addPossibleDay(
+								new Shift(row - 7, false, (record.get(4).equals("x") ? true : false)));
 						System.out.println(assistants.get(i).getName() + " cannot work the night shift on " + (row - 7));
 					}
 				}
-				
+				shifts.put("day_" + (row - 7), new Shift(row - 7, true, (record.get(4).equals("x") ? true : false)));
+				shifts.put("night_" + (row - 7), new Shift(row - 7, false, (record.get(4).equals("x") ? true : false)));
 			}
 			
 			
@@ -303,7 +308,8 @@ public class Schichtplaner implements IGACObersvers, IAStarObersvers
 		// ####################################################################################
 		// ########################### Invoke Constraint Solver ###############################
 		// ####################################################################################
-		SchichtenplanerAdapter aStarGAC = new SchichtenplanerAdapter(constraints, vars, ENextVariable.SIMPLE, assistants);
+		SchichtenplanerAdapter aStarGAC = new SchichtenplanerAdapter(constraints, vars, ENextVariable.SIMPLE, assistants,
+				shifts);
 		aStarGAC.register(this);
 		AStar aStarInstance = new AStar(aStarGAC);
 		aStarInstance.register(this);
